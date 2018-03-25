@@ -243,10 +243,10 @@ export default class BufferedProxy {
   }
 
   private get validResults(): ValidationResult[] {
-    return Object.values(this.bufferedProxy.cache).filter(r => r.isValid);
+    return Object.values(this.cache).filter(r => r.isValid);
   }
 
   private get invalidResults(): ValidationResult[] {
-    return Object.values(this.bufferedProxy.cache).filter(r => r.isInvalid);
+    return Object.values(this.cache).filter(r => r.isInvalid);
   }
 }
