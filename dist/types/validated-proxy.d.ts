@@ -1,16 +1,10 @@
-import BufferedProxy, {
-  BufferErrorHandler,
-  BufferExecutionHandler
-} from './buffered-proxy';
-import validatorLookup, { IValidationMap } from './utils/validator-lookup';
-import ValidationResult from './validation-result';
-
+import BufferedProxy, { BufferErrorHandler, BufferExecutionHandler } from './buffered-proxy';
+import { IValidationMap } from './utils/validator-lookup';
 export interface IValidatedProxyOptions {
-  executionHandler?: BufferExecutionHandler;
-  errorHandler?: BufferErrorHandler;
-  validations: IValidationMap;
+    executionHandler?: BufferExecutionHandler;
+    errorHandler?: BufferErrorHandler;
+    validations: IValidationMap;
 }
-
 /**
  * Wraps a target object with a `BufferedProxy`. Setters will first invoke a
  * validator function, if found in a supplied validation map. The validator
@@ -50,27 +44,4 @@ export interface IValidatedProxyOptions {
  * @param target
  * @param validatedProxyOptions
  */
-export default function validatedProxy(
-  target: object,
-  { errorHandler, executionHandler, validations }: IValidatedProxyOptions
-) {
-  const buffer = new BufferedProxy(target, {
-    errorHandler,
-    executionHandler
-  });
-  return new Proxy(buffer, {
-    get(targetBuffer, key, receiver) {
-      return targetBuffer.get(key);
-    },
-    set(targetBuffer, key, value, receiver) {
-      const validators = validatorLookup(validations, key);
-      const result = new ValidationResult(
-        key,
-        value,
-        validators.map(validate => validate(key, value, target[key]))
-      );
-      targetBuffer.set(key, result);
-      return true;
-    }
-  });
-}
+export default function validatedProxy(target: object, {errorHandler, executionHandler, validations}: IValidatedProxyOptions): BufferedProxy;
