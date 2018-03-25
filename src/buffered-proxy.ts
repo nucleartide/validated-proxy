@@ -212,7 +212,7 @@ export default class BufferedProxy {
    */
   public get(key: PropertyKey) {
     if (hasOwnProperty(this.cache, key)) {
-      return this.cache[key].value;
+      return this.bufferedProxy.cache[key].value;
     }
     if (this[key]) {
       return this[key];
@@ -230,7 +230,7 @@ export default class BufferedProxy {
    * ```
    */
   public reset(): void {
-    this.__cache__ = Object.create(null);
+    this.bufferedProxy.__cache__ = Object.create(null);
   }
 
   private get cache() {
@@ -238,15 +238,15 @@ export default class BufferedProxy {
   }
 
   private updateCache(result: ValidationResult): ValidationResult {
-    this.cache[result.key] = result;
+    this.bufferedProxy.cache[result.key] = result;
     return result;
   }
 
   private get validResults(): ValidationResult[] {
-    return Object.values(this.cache).filter(r => r.isValid);
+    return Object.values(this.bufferedProxy.cache).filter(r => r.isValid);
   }
 
   private get invalidResults(): ValidationResult[] {
-    return Object.values(this.cache).filter(r => r.isInvalid);
+    return Object.values(this.bufferedProxy.cache).filter(r => r.isInvalid);
   }
 }
