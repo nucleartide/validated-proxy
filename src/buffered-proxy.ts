@@ -82,6 +82,7 @@ export default class BufferedProxy {
     this.target = target;
     this.errorHandler = errorHandler || defaultErrorHandler;
     this.executionHandler = executionHandler || defaultExecutionHandler;
+    this.bufferedProxy = this;
   }
 
   /**
@@ -170,6 +171,10 @@ export default class BufferedProxy {
    * @param validationResult
    */
   public set(key: PropertyKey, result: ValidationResult): ValidationResult {
+    if (key === '__cache__') {
+      this.bufferedProxy.__cache__ = result;
+      return;
+    }
     if (result.isInvalid) {
       this.errorHandler(result.messages);
     }
